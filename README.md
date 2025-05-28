@@ -36,7 +36,7 @@ pytest-asyncio
 
 ### Клонировать репозиторий:
 ```text
-git clone https://github.com/skr1pmen/weather-fastapi.git
+git clone https://github.com/skr1pmen/weather_fastapi.git
 cd weather-fastapi
 ```
 
