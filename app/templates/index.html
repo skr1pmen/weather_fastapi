@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+    <title>Погода</title>
+
+    <script>
+        async function autocomplete() {
+            const input = document.getElementById('city');
+            const val = input.value;
+            if (val.length < 2) return;
+
+            try {
+                const response = await fetch(`/autocomplete?q=${encodeURIComponent(val)}`);
+                const cities = await response.json();
+                const datalist = document.getElementById('cities');
+                datalist.innerHTML = '';
+                cities.forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    datalist.appendChild(option);
+                });
+            } catch (err) {
+                console.error('Ошибка автодополнения:', err);
+            }
+        }
+
+        async function searchWeather(event) {
+            event.preventDefault();
+            const city = document.getElementById('city').value;
+
+            const response = await fetch('/search', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: `city=${encodeURIComponent(city)}`
+            });
+
+            const html = await response.text();
+            document.getElementById('result').innerHTML = html;
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('city').addEventListener('input', autocomplete);
+            document.getElementById('weather-form').addEventListener('submit', searchWeather);
+        });
+    </script>
+</head>
+<body>
+<div class="container">
+    <h1>Узнай погоду</h1>
+    <form id="weather-form">
+        <input type="text" name="city" id="city" list="cities" required placeholder="Ваш город">
+        <datalist id="cities"></datalist>
+        <button type="submit">Показать</button>
+    </form>
+
+    <div id="result">
+        {{ weather_html | safe }}
+    </div>
+</div>
+</body>
+</html>
