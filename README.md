@@ -57,7 +57,6 @@ uvicorn main:app --reload
 weather-app/
 │
 ├── main.py                 # Основной файл FastAPI приложения
-├── test_main.py            # Автоматические тесты
 ├── requirements.txt        # Зависимости проекта
 │
 ├── templates/
